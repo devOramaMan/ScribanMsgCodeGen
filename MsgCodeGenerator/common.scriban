@@ -1,0 +1,33 @@
+﻿using AppMsg;
+using System.Collections.Generic;
+
+namespace {{ model.namespace }}
+{
+{{ for class in model.classes }}
+
+    public class {{ class.Name }} : Serializer
+    {
+        public {{ class.Name }}(byte[] data)
+        {
+            Decode(data);
+        }
+
+{{ for prop in class.Properties }}
+        public {{ prop.Type }} {{ prop.Name }} { get; set; }
+{{ end }}
+
+        public byte[] Encode()
+        {
+            return [];
+        }
+
+        public void Decode(byte[] data)
+        {
+
+        }
+    }
+
+{{ end }}
+}
+
+##Common:Separator##

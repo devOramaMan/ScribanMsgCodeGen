@@ -1,0 +1,101 @@
+﻿
+{{ for area in model.Areas }}
+{{ for class in area.classes }}
+using {{ model.namespace }};
+using System;
+using System.Collections.Generic;
+
+namespace {{ model.namespace }}.{{ area.namespace }}
+{
+    public class {{ class.Name }} : BaseMsg
+    {
+        public const string MsgId = "{{class.MsgNum}}";
+
+        private List<int> _bits = [ {{ for prop in class.Properties }} {{ prop.Bits }}{{ if (for.index < class.Properties.size - 1 )}},{{end}} {{end}} ];
+
+        public {{ class.Name }}(byte[] data, object? msgHeader) : base(data, msgHeader)
+        {
+        }
+        
+{{ for prop in class.Properties }}
+        public {{ prop.Type }}{{if (prop.isNullable ) }}?{{end}} {{ prop.Name }} { get; set; }
+{{ end }}
+
+        public override byte[] Encode()
+        {
+            return [];
+        }
+
+        public override void Decode(byte[] data)
+        {
+
+        }
+    }
+}
+
+##{{ class.Name }}:Separator##
+{{ end }}
+{{ end }}
+{{ for area in model.Areas }}
+using {{model.namespace}}.{{area.namespace}};
+{{end}}
+
+namespace {{model.namespace}}
+{
+    internal class MsgDictionary 
+    {
+        static Dictionary<string, Type> MsgDict = new Dictionary<string, Type>
+        { {{ for area in model.Areas }}{{ for class in area.classes }}
+            { {{class.Name}}.MsgId, typeof({{class.Name}}) }, {{end}}{{end}}
+        };
+
+        public static BaseMsg CreateInstance(string msgId, object? header, byte[] data)
+        {
+            if (MsgDict.TryGetValue(msgId, out Type? handlerType))
+            {
+                return (BaseMsg)Activator.CreateInstance(handlerType, header, data);
+            }
+            else
+            {
+                throw new KeyNotFoundException($"Message ID '{msgId}' not found.");
+            }
+        }
+    }
+}
+##MsgDictionary:Separator##
+{{ for area in model.Areas }}
+{{ for class in area.classes }}
+using Xunit;
+using {{model.namespace}};
+using {{model.namespace}}.{{ area.namespace }};
+
+namespace {{model.namespace}}UnitTest
+{
+    public class {{class.Name}}Test
+    {
+        [Fact]
+        public void classTest()
+        {
+            byte[] decode = new byte[] { 1, 3, 4, 5, 6 };
+            var header = new MsgHeader(decode);
+            var msg = new {{class.Name}}(decode, header);
+            byte[] encode = msg.Encode();
+
+            Assert.Equal(decode, encode);
+        }
+
+        [Fact]
+        public void baseClassTest()
+        {
+            byte[] decode = new byte[]{ 1, 3, 4, 5, 6 };
+            var msg = BaseMsg.CreateInstance(decode);
+            Assert.Null(msg);
+            //Cast msg to the msg type Assert wrong msg type
+        }
+    }
+}
+
+
+##{{ class.Name }}Test:Separator##
+{{ end }}
+{{ end }}

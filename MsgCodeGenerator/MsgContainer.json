@@ -1,0 +1,132 @@
+{
+  "namespace": "AppMsg",
+  "classes": [
+    {
+      "Name": "DTG",
+      "Properties": [
+        {
+          "Name": "Day",
+          "Type": "int",
+          "Bits": 5
+        },
+        {
+          "Name": "Hour",
+          "Type": "int",
+          "Bits": 5
+        },
+        {
+          "Name": "Minute",
+          "Type": "int",
+          "Bits": 6
+        },
+        {
+          "Name": "HasSeconds",
+          "Type": "bool",
+          "Bits": 1
+        },
+        {
+          "Name": "Seconds",
+          "Type": "bool",
+          "Bits": 6
+        }
+      ]
+    },
+    {
+      "Name": "Location",
+      "Properties": [
+        {
+          "Name": "Latitude",
+          "Type": "float",
+          "Bits": 25
+        },
+        {
+          "Name": "Longitude",
+          "Type": "float",
+          "Bits": 26
+        }
+      ]
+    },
+    {
+      "Name": "Elevation",
+      "Properties": [
+        {
+          "Name": "Value",
+          "Type": "int",
+          "Bits": 13
+        }
+      ]
+    }
+  ],
+  "Areas": [
+    {
+      "namespace": "OnCampingResort",
+      "classes": [
+        {
+          "Name": "CampReport",
+          "MsgNum": 200,
+          "Stack": "AL1C1",
+          "Properties": [
+            {
+              "Name": "Dtg",
+              "Type": "DTG",
+              "isNullable": true,
+              "Bits": 23
+            },
+            {
+              "Name": "HasElevation",
+              "Type": "bool",
+              "Bits": 1
+            },
+            {
+              "Name": "Elevation",
+              "Type": "int",
+              "isNullable":  true,
+              "Bits": 13
+            },
+            {
+              "Name": "HasLocation",
+              "Type": "bool",
+              "Bits": 1
+            },
+            {
+              "Name": "Position",
+              "Type": "Location",
+              "isNullable": true,
+              "Bits": 51
+            }
+
+          ]
+        },
+        {
+          "Name": "ToiletStat",
+          "MsgNum": 201,
+          "Stack": "FG2R1",
+          "Properties": [
+            {
+              "Name": "Dtg",
+              "Type": "DTG",
+              "isNullable": true,
+              "Bits": 23
+            },
+            {
+              "Name": "HasToiletPaper",
+              "Type": "bool",
+              "Bits": 1
+            },
+            {
+              "Name": "HasLocation",
+              "Type": "bool",
+              "Bits": 1
+            },
+            {
+              "Name": "Position",
+              "Type": "Location",
+              "isNullable": true,
+              "Bits": 51
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
